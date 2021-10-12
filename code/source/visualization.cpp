@@ -16,6 +16,8 @@ constexpr auto max_iter = 20u;
 constexpr auto color0 = "0.6 0.6 0.6";
 constexpr auto color1 = "0.8352941 0.3686275 0";
 constexpr auto color2 = "0.0 0.4470588235294118 0.6980392156862745>";
+constexpr auto canvas_size = 150.0;
+constexpr auto line_styling = "pen=\"1.0\" opacity=\"60%\"";
 
 void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
                 IpeFile& ipe) {
@@ -37,15 +39,15 @@ void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
         // line starting at (x1, y1)
         auto x_shift = std::abs(x1 - x2) < 0.5 ? 0 : (x1 < x2 ? -1.0 : 1.0);
         auto y_shift = std::abs(y1 - y2) < 0.5 ? 0 : (y1 < y2 ? -1.0 : 1.0);
-        ipe.line(x1, y1, x2 + x_shift, y2 + y_shift, color);
+        ipe.line(x1, y1, x2 + x_shift, y2 + y_shift, color, line_styling);
 
         // line starting at (x1, y1)
         x_shift = std::abs(x1 - x2) < 0.5 ? 0 : (x1 < x2 ? 1.0 : -1.0);
         y_shift = std::abs(y1 - y2) < 0.5 ? 0 : (y1 < y2 ? 1.0 : -1.0);
-        ipe.line(x1 + x_shift, y1 + y_shift, x2, y2, color);
+        ipe.line(x1 + x_shift, y1 + y_shift, x2, y2, color, line_styling);
         ipe.end_group();
       } else {
-        ipe.line(x1, y1, x2, y2, color);
+        ipe.line(x1, y1, x2, y2, color, line_styling);
       }
     }
   }
@@ -53,7 +55,7 @@ void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
   for (Node u = 0; u < G.n(); ++u) {
     auto x = GG.points[u].x;
     auto y = GG.points[u].y;
-    auto d = 0.01;
+    auto d = 1.8 / canvas_size;
     if (GG.torus && (x < d || x > 1 - d || y < d || y > 1 - d)) {
       ipe.start_group_with_clipping(0, 0, 1, 1);
       ipe.point(x, y, colors[u] ? color1 : color2);
@@ -73,6 +75,8 @@ void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
       ipe.point(x, y, colors[u] ? color1 : color2);
     }
   }
+
+  ipe.box(0, 0, 1, 1);
 }
 
 int main(int argc, char* argv[]) {
@@ -84,7 +88,7 @@ int main(int argc, char* argv[]) {
   // GeometricGraph GG = random_geometric_graph(n, avg_deg, generator);
   Graph& G = GG.graph;
 
-  IpeFile ipe("testoutput.ipe", 300);
+  IpeFile ipe("testoutput.ipe", canvas_size);
   auto colors_old = random_colors(G.n(), generator);
   for (auto i = 0u; i < max_iter; ++i) {
     draw_graph(GG, colors_old, ipe);
