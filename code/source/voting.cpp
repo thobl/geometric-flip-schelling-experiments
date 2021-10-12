@@ -36,6 +36,24 @@ unsigned monochromatic_edges(const Graph& G, const std::vector<bool>& colors) {
   return double_count / 2;
 }
 
+unsigned nr_color_changes(const std::vector<bool>& colors_old,
+                          const std::vector<bool>& colors_new) {
+  auto n = colors_old.size();
+  unsigned count = 0;
+  for (Node v = 0; v < n; ++v) {
+    if (colors_old[v] != colors_new[v]) {
+      ++count;
+    }
+  }
+  return count;
+}
+
+unsigned minority_count(const std::vector<bool>& colors) {
+  auto count = std::count(colors.begin(), colors.end(), true);
+  auto n = colors.size();
+  return std::min<unsigned>(count, n - count);
+}
+
 std::vector<bool> voting_result(const Graph& G, const std::vector<bool>& colors,
                                 std::default_random_engine& generator) {
   std::bernoulli_distribution coin_flip(0.5);
