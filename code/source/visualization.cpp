@@ -17,6 +17,7 @@ constexpr auto color0 = "0.6 0.6 0.6";
 constexpr auto color1 = "0.8352941 0.3686275 0";
 constexpr auto color2 = "0.0 0.4470588235294118 0.6980392156862745>";
 
+
 void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
                 IpeFile& ipe) {
   const Graph& G = GG.graph;
@@ -27,8 +28,26 @@ void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
       if (colors[u] == colors[v]) {
         color = colors[u] ? color1 : color2;
       }
-      ipe.line(GG.points[u].x, GG.points[u].y, GG.points[v].x, GG.points[v].y,
-               color);
+      auto x1 = GG.points[u].x;
+      auto y1 = GG.points[u].y;
+      auto x2 = GG.points[v].x;
+      auto y2 = GG.points[v].y;
+
+      if (GG.torus && (std::abs(x1 - x2) > 0.5 || std::abs(y1 - y2) > 0.5)) {
+        ipe.start_group_with_clipping(0, 0, 1, 1);
+        // line starting at (x1, y1)
+        auto x_shift = std::abs(x1 - x2) < 0.5 ? 0 : (x1 < x2 ? -1.0 : 1.0);
+        auto y_shift = std::abs(y1 - y2) < 0.5 ? 0 : (y1 < y2 ? -1.0 : 1.0);
+        ipe.line(x1, y1, x2 + x_shift, y2 + y_shift, color);
+
+        // line starting at (x1, y1)
+        x_shift = std::abs(x1 - x2) < 0.5 ? 0 : (x1 < x2 ? 1.0 : -1.0);
+        y_shift = std::abs(y1 - y2) < 0.5 ? 0 : (y1 < y2 ? 1.0 : -1.0);
+        ipe.line(x1 + x_shift, y1 + y_shift, x2, y2, color);
+        ipe.end_group();        
+      } else {
+        ipe.line(x1, y1, x2, y2, color);
+      }
     }
   }
 
@@ -42,7 +61,8 @@ int main(int argc, char* argv[]) {
   (void)argv;
   std::default_random_engine generator(seed);
 
-  GeometricGraph GG = random_geometric_graph(n, avg_deg, generator);
+  GeometricGraph GG = random_geometric_graph(n, avg_deg, generator, true);
+  // GeometricGraph GG = random_geometric_graph(n, avg_deg, generator);
   Graph& G = GG.graph;
 
   IpeFile ipe("testoutput.ipe", 300);
@@ -54,7 +74,7 @@ int main(int argc, char* argv[]) {
     if (colors_new == colors_old) {
       break;
     }
-    
+
     colors_old = std::move(colors_new);
   }
 

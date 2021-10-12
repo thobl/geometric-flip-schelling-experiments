@@ -60,6 +60,29 @@ void IpeFile::disk(double x, double y, double radius,
          << "</path>\n";
 }
 
+void IpeFile::start_group() {
+  m_file << "<group>\n";
+}
+
+void IpeFile::start_group_with_clipping(double x1, double y1, double x2,
+                                        double y2) {
+  x1 *= m_scaling;
+  y1 *= m_scaling;
+  x2 *= m_scaling;
+  y2 *= m_scaling;
+  m_file << "<group clip=\""
+         << x1 << " " << y1 << " m\n"
+         << x1 << " " << y2 << " l\n"
+         << x2 << " " << y2 << " l\n"
+         << x2 << " " << y1 << " l\n"
+         << "h\n"
+         << "\">\n";
+}
+
+void IpeFile::end_group() {
+  m_file << "</group>\n";
+}
+
 void IpeFile::file_start() {
   m_file << "<?xml version=\"1.0\"?>\n"
          << "<!DOCTYPE ipe SYSTEM \"ipe.dtd\">\n"

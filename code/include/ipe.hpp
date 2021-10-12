@@ -22,6 +22,10 @@ class IpeFile {
   void disk(double x, double y, double radius,
             const std::string& color = "black");
 
+  void start_group();
+  void start_group_with_clipping(double x1, double y1, double x2, double y2);
+  void end_group();
+  
  private:
   std::ofstream m_file;
   
