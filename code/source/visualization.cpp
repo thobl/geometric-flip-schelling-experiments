@@ -17,7 +17,6 @@ constexpr auto color0 = "0.6 0.6 0.6";
 constexpr auto color1 = "0.8352941 0.3686275 0";
 constexpr auto color2 = "0.0 0.4470588235294118 0.6980392156862745>";
 
-
 void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
                 IpeFile& ipe) {
   const Graph& G = GG.graph;
@@ -44,7 +43,7 @@ void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
         x_shift = std::abs(x1 - x2) < 0.5 ? 0 : (x1 < x2 ? 1.0 : -1.0);
         y_shift = std::abs(y1 - y2) < 0.5 ? 0 : (y1 < y2 ? 1.0 : -1.0);
         ipe.line(x1 + x_shift, y1 + y_shift, x2, y2, color);
-        ipe.end_group();        
+        ipe.end_group();
       } else {
         ipe.line(x1, y1, x2, y2, color);
       }
@@ -52,7 +51,27 @@ void draw_graph(const GeometricGraph& GG, const std::vector<bool> colors,
   }
 
   for (Node u = 0; u < G.n(); ++u) {
-    ipe.point(GG.points[u].x, GG.points[u].y, colors[u] ? color1 : color2);
+    auto x = GG.points[u].x;
+    auto y = GG.points[u].y;
+    auto d = 0.01;
+    if (GG.torus && (x < d || x > 1 - d || y < d || y > 1 - d)) {
+      ipe.start_group_with_clipping(0, 0, 1, 1);
+      ipe.point(x, y, colors[u] ? color1 : color2);
+      std::vector<double> x_shifts = {0.0};
+      if (x < d) x_shifts.push_back(1);
+      if (x > 1 - d) x_shifts.push_back(-1);
+      std::vector<double> y_shifts = {0.0};
+      if (y < d) y_shifts.push_back(1);
+      if (y > 1 - d) y_shifts.push_back(-1);
+      for (double x_shift : x_shifts) {
+        for (double y_shift : y_shifts) {
+          ipe.point(x + x_shift, y + y_shift, colors[u] ? color1 : color2);
+        }
+      }
+      ipe.end_group();
+    } else {
+      ipe.point(x, y, colors[u] ? color1 : color2);
+    }
   }
 }
 
