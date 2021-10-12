@@ -1,0 +1,49 @@
+cmake_minimum_required(VERSION 3.3)
+
+project(Schelling)
+
+get_filename_component(build_dir ${CMAKE_CURRENT_BINARY_DIR} NAME)
+if (${build_dir} MATCHES "debug")
+  set(CMAKE_BUILD_TYPE Debug)
+else()
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_STANDARD 20)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(LINK_FLAGS "")
+set(COMPILE_FLAGS "-Wall -Wextra -pedantic")
+
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${LINK_FLAGS}")
+
+set(HEADERS
+  include/graph.hpp
+  include/rgg.hpp
+  include/er.hpp
+  include/voting.hpp)
+
+set(SOURCE_FILES
+  source/graph.cpp
+  source/rgg.cpp
+  source/er.cpp
+  source/voting.cpp)
+
+set(EXECUTABLE_FILES
+  source/run.cpp)
+
+# this is some windows stuff; not sure whether we need it...
+find_library(PSAPI psapi)
+if (NOT PSAPI)
+  set(PSAPI "")
+endif()
+
+include_directories(./include)
+add_library(code STATIC ${SOURCE_FILES} ${HEADERS})
+foreach(file ${EXECUTABLE_FILES})
+    get_filename_component(executable ${file} NAME_WE)
+    add_executable(${executable} ${file})
+    target_link_libraries(${executable} code ${PSAPI})
+endforeach()

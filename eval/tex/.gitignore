@@ -1,0 +1,7 @@
+auto
+*.synctex.gz*
+_region_.tex
+master.pdf
+*.aux
+*.log
+*.out
