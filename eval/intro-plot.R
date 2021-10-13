@@ -1,20 +1,20 @@
 library(ggplot2)
-library(sitools)
 library(tikzDevice)
 
-tbl <- read.csv("measurements_1k.csv")
-tbl$monochrome_after_fraction <- tbl$monochrome_after / tbl$m;
-tbl$monochrome_before_fraction <- tbl$monochrome_before / tbl$m
-tbl <- tbl[tbl$deg_avg_exp >= 2,]
+source("theme.R")
 
-theme_set(theme_bw())
-colors <- c("#D55E00", "#E69F00", "#009E73", "#0072B2",
-            "#56B4E9", "#F0E442", "#999999", "#CC79A7")
+tbl <- read.csv("measurements.csv")
+tbl$monochrome_fraction <- tbl$monochrome / tbl$m;
+tbl$color_changes_fraction <- tbl$color_changes / tbl$m;
+tbl$minority_count_fraction <- tbl$minority_count / tbl$m;
+tbl <- tbl[tbl$deg_avg_exp >= 2, ]
 
-model_labs <- c("G(n, m)",
-                "Erd{\\H o}s-R\\'enyi graphs",
+tbl <- tbl[tbl$iteration == 1, ]
+tbl <- tbl[tbl$model != "rgg", ]
+
+model_labs <- c("Erd{\\H o}s-R\\'enyi graphs",
                 "random geometric graphs")
-names(model_labs) <- c("er_m", "er_p", "rgg")
+names(model_labs) <- c("er_p", "rgg_torus")
 
 percentile <- function(perc) {
     # perc is the percentile which should be computed for the numeric vector x
@@ -25,9 +25,10 @@ si_latex_labels <- function(x) {
     paste0(x / 1000, "\\,k")
 }
 
-p <- ggplot(tbl, aes(x = n,
-                     y = monochrome_after_fraction,
-                     color = factor(deg_avg_exp))) +
+p <- ggplot(tbl,
+            aes(x = n,
+                y = monochrome_fraction,
+                color = factor(deg_avg_exp))) +
     stat_summary(fun = mean, fun.max = percentile(75), fun.min = percentile(25),
                  geom = "errorbar", width = 0) +
     stat_summary(fun = mean, geom = "line") +
@@ -39,8 +40,8 @@ p <- ggplot(tbl, aes(x = n,
     scale_color_manual(name = "average\ndegree", values = colors) +
     theme(legend.position = "right")
 
-ggsave("plot.pdf", plot = p, width = 6, height = 3)
+ggsave("pdf/intro-plot.pdf", plot = p, width = 6, height = 3)
 
-tikz(file = "tex/plot.tex", width = 4.7, height = 2.1)
+tikz(file = "tex/intro-plot.tex", width = 4.7, height = 2.1)
 print(p)
 dev.off()

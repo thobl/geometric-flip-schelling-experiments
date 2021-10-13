@@ -18,7 +18,7 @@ constexpr auto iterations = 40u;
 constexpr auto ns = {
     5000u, 10000u, 15000u, 20000u, 25000u
 };
-constexpr auto avg_degs = {1.5, 2.0, 4.0, 8.0, 16.0};
+constexpr auto avg_degs = {2.0, 4.0, 8.0, 16.0};
 
 // constexpr auto samples = 1u;
 // constexpr auto iterations = 20u;
