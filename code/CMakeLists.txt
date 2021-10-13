@@ -20,6 +20,7 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${LINK_FLAGS}")
 
 set(HEADERS
+  lib/CLI11.hpp
   include/graph.hpp
   include/rgg.hpp
   include/er.hpp
@@ -43,7 +44,7 @@ if (NOT PSAPI)
   set(PSAPI "")
 endif()
 
-include_directories(./include)
+include_directories(include lib)
 add_library(code STATIC ${SOURCE_FILES} ${HEADERS})
 foreach(file ${EXECUTABLE_FILES})
     get_filename_component(executable ${file} NAME_WE)

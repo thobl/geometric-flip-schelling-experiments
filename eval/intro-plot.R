@@ -3,18 +3,18 @@ library(tikzDevice)
 
 source("theme.R")
 
-tbl <- read.csv("measurements.csv")
+tbl <- read.csv("data/intro.csv")
 tbl$monochrome_fraction <- tbl$monochrome / tbl$m;
-tbl$color_changes_fraction <- tbl$color_changes / tbl$m;
-tbl$minority_count_fraction <- tbl$minority_count / tbl$m;
-tbl <- tbl[tbl$deg_avg_exp >= 2, ]
+tbl$color_changes_fraction <- tbl$color_changes / tbl$n;
+tbl$minority_count_fraction <- tbl$minority_count / tbl$n;
 
 tbl <- tbl[tbl$iteration == 1, ]
-tbl <- tbl[tbl$model != "rgg", ]
 
-model_labs <- c("Erd{\\H o}s-R\\'enyi graphs",
-                "random geometric graphs")
-names(model_labs) <- c("er_p", "rgg_torus")
+model_labs <- c("G(n, m)",
+                "Erd{\\H o}s-R\\'enyi graphs",
+                "random geometric graphs (square)",
+                "random geometric graphs (torus)")
+names(model_labs) <- c("er_m", "er_p", "rgg_square", "rgg_torus")
 
 percentile <- function(perc) {
     # perc is the percentile which should be computed for the numeric vector x
