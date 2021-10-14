@@ -20,11 +20,12 @@
 // constexpr auto avg_degs = {2.0, 4.0, 8.0, 16.0, 32.0};
 
 constexpr auto header =
-    "model,n,m,deg_avg,deg_avg_exp,iteration,monochrome,color_changes,"
+    "model,n,m,deg_avg,deg_avg_exp,seed,iteration,monochrome,color_changes,"
     "minority_count";
 
-void run(std::string model, unsigned n, unsigned avg_deg, unsigned iterations,
-         std::default_random_engine& generator) {
+void run(std::string model, unsigned n, unsigned avg_deg, unsigned seed,
+         unsigned iterations, std::default_random_engine& generator,
+         bool skip_intermediate) {
   std::function<Graph(unsigned, double)> graph_generator;
 
   if (model == "rgg_torus") {
@@ -50,18 +51,20 @@ void run(std::string model, unsigned n, unsigned avg_deg, unsigned iterations,
   auto colors_old = random_colors(n, generator);
 
   std::cout << model << "," << G.n() << "," << G.m() << ","
-            << 2.0 * G.m() / G.n() << "," << avg_deg << "," << 0 << ","
-            << monochromatic_edges(G, colors_old) << "," << 0 << ","
+            << 2.0 * G.m() / G.n() << "," << avg_deg << "," << seed << "," << 0
+            << "," << monochromatic_edges(G, colors_old) << "," << 0 << ","
             << minority_count(colors_old) << "\n";
 
   for (unsigned i = 1; i <= iterations; ++i) {
     auto colors_new = voting_result(G, colors_old, generator);
 
-    std::cout << model << "," << G.n() << "," << G.m() << ","
-              << 2.0 * G.m() / G.n() << "," << avg_deg << "," << i << ","
-              << monochromatic_edges(G, colors_new) << ","
-              << nr_color_changes(colors_old, colors_new) << ","
-              << minority_count(colors_new) << "\n";
+    if (!skip_intermediate || i == iterations) {
+      std::cout << model << "," << G.n() << "," << G.m() << ","
+                << 2.0 * G.m() / G.n() << "," << avg_deg << "," << seed << ","
+                << i << "," << monochromatic_edges(G, colors_new) << ","
+                << nr_color_changes(colors_old, colors_new) << ","
+                << minority_count(colors_new) << "\n";
+    }
 
     colors_old = std::move(colors_new);
   }
@@ -98,6 +101,12 @@ int main(int argc, char* argv[]) {
                  "Number of iterations of the flip Schelling process.")
       ->default_val(50u);
 
+  bool skip_intermediate;
+  app.add_flag("--skip-intermediate", skip_intermediate,
+               "Only output the initial configuration and the result after the "
+               "last iteration.")
+      ->default_val(false);
+
   bool only_header, no_header;
   app.add_flag("--only-header", only_header, "Only print the csv-header.")
       ->default_val(false);
@@ -116,7 +125,7 @@ int main(int argc, char* argv[]) {
 
   std::default_random_engine generator(seed);
   for (unsigned i = 0; i < repetitions; ++i) {
-    run(model, n, avg_deg, iterations, generator);
+    run(model, n, avg_deg, seed, iterations, generator, skip_intermediate);
   }
 
   return 0;

@@ -18,13 +18,14 @@ GeometricGraph random_geometric_graph(unsigned int n, double avg_deg,
   }
 
   // sort points into a grid
-  int nr_cells = std::ceil(1 / threshold);
+  int nr_cells = std::floor(1 / threshold);
+  double cell_size = 1.0 / nr_cells;
   std::vector<std::vector<std::vector<Node>>> cells(
       nr_cells, std::vector<std::vector<Node>>(nr_cells));
 
   for (Node v = 0; v < n; ++v) {
-    int ix = std::floor(G.points[v].x / threshold);
-    int iy = std::floor(G.points[v].y / threshold);
+    int ix = std::floor(G.points[v].x / cell_size);
+    int iy = std::floor(G.points[v].y / cell_size);
     cells[ix][iy].push_back(v);
   }
 
@@ -48,8 +49,8 @@ GeometricGraph random_geometric_graph(unsigned int n, double avg_deg,
   // generate edges
   for (Node v = 0; v < n; ++v) {
     // cell of current node
-    int ix = std::floor(G.points[v].x / threshold);
-    int iy = std::floor(G.points[v].y / threshold);
+    int ix = std::floor(G.points[v].x / cell_size);
+    int iy = std::floor(G.points[v].y / cell_size);
     for (int dx = -1; dx <= 1; ++dx) {
       for (int dy = -1; dy <= 1; ++dy) {
         // neighboring cell (mod nr_cells)
