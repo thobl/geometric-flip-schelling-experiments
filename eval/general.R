@@ -24,11 +24,11 @@ main_plot <- function(tbl, mapping) {
 
     ggplot(tbl,
            mapping = mapping) +
-        ## stat_summary(geom = "errorbar",
-        ##              fun = median,
-        ##              fun.max = percentile(75),
-        ##              fun.min = percentile(25),
-        ##              size = 0.2, width = 0) +
+        stat_summary(geom = "errorbar",
+                     fun = median,
+                     fun.max = percentile(75),
+                     fun.min = percentile(25),
+                     size = 0.2, width = 0) +
         stat_summary(fun = median, geom = "line") +
         stat_summary(fun = median, geom = "point", size = 0.7) +
         facet_grid(cols = vars(model), labeller = labeller) +

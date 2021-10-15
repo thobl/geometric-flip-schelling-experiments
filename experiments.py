@@ -70,18 +70,42 @@ run.add(
     header_command=header,
 )
 
+# run.add(
+#     "crit_avg_deg",
+#     command + " --skip-intermediate",
+#     {
+#         "model": "rgg_torus",
+#         "avg_deg_center": [100, 200, 300, 400, 500, 600],
+#         "n": lambda args: int(int(args["avg_deg_center"]) ** 2 / 5),
+#         "avg_deg_offset": [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1],
+#         "avg_deg": lambda a: round(
+#             int(a["avg_deg_center"])
+#             + float(a["avg_deg_offset"]) * 0.5 * (int(a["avg_deg_center"]) + 80)
+#         ),
+#         "seed": 17,
+#         "repetitions": 1000,
+#         "iterations": 300,
+#     },
+#     stdout_file=output_dir + "crit_avg_deg.csv",
+#     header_command=header,
+# )
+
 run.add(
     "crit_avg_deg",
-    command,
+    command + " --skip-intermediate",
     {
         "model": "rgg_torus",
-        "n": [1000, 2000, 4000, 8000, 16000],
-        "avg_deg_offset": [-100, -75, -50, -25, 0, 25, 50, 100],
-        "avg_deg": lambda args: (
-            max(round(math.sqrt(10 * int(args["n"]))) + int(args["avg_deg_offset"]), 5)
-        ),
-        ## "avg_deg": [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
         "seed": list(range(0, 500)),
+        "n": [x ** 2 for x in [30, 40, 50, 60, 70, 80, 90, 100]],
+        "factor_max": 3.5,
+        "factor_min": 0.5,
+        "factor_step": [i / (steps - 1) for steps in [11] for i in range(steps)],
+        "factor": lambda a: (
+            float(a["factor_min"])
+            + float(a["factor_step"])
+            * (float(a["factor_max"]) - float(a["factor_min"]))
+        ),
+        "avg_deg": lambda a: round(math.sqrt(float(a["n"])) * float(a["factor"])),
         "repetitions": 1,
         "iterations": 200,
     },
