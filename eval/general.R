@@ -1,6 +1,6 @@
 theme_set(theme_bw())
 colors <- c("#D55E00", "#E69F00", "#009E73", "#0072B2",
-            "#56B4E9", "#F0E442", "#999999", "#CC79A7")
+            "#F0E442", "#CC79A7", "#999999", "#56B4E9")
 
 add_fractions <- function(tbl) {
     tbl$monochrome_fraction <- tbl$monochrome / tbl$m;

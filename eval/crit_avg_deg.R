@@ -12,23 +12,30 @@ tbl <- aggregate(. ~ model + n + deg_avg_exp, data = tbl, mean)
 tbl$sqrtn <- sqrt(tbl$n)
 tbl$factor <- tbl$deg_avg_exp / tbl$sqrtn
 
+## tbl_lines <- tbl[tbl$factor <= 3.5 & tbl$factor >= 1.4, ]
+tbl_lines <- tbl[tbl$factor <= 2.3 & tbl$factor >= 1.7, ]
+tbl_labels <- tbl_lines[tbl_lines$n == 10000, ]
+
 p <- ggplot(tbl,
             aes(x = deg_avg_exp,
                 y = degen,
                 color = factor(n))) +
-    geom_line(data = tbl[tbl$factor <= 2.3 & tbl$factor >= 1.7, ],
-              aes(group = factor), color = "gray") +
+    geom_line(data = tbl_lines, aes(group = factor), color = "gray") +
     geom_line() + geom_point() +
+    geom_segment(data = tbl_labels, aes(xend = deg_avg_exp, yend = -Inf),
+                 linetype = "dashed") +
+    geom_label(data = tbl_labels,
+               aes(label = paste0("$", factor, "\\sqrt{n}$"),
+                   ## y = 0.5 * degen - 0.1,
+                   y = degen - 0.1),
+               show.legend = FALSE, size = 3.1) +
     scale_color_manual(values = colors) +
-    geom_label(data = tbl[tbl$n == 10000 & tbl$factor <= 2.3 & tbl$factor >= 1.7, ],
-               aes(label = paste("sqrt(n) *", factor)),
-               color = "gray",
-               nudge_x = 15, hjust = "outward", show.legend = FALSE) +
-    xlab("average degree") +
-    ylab("probability to become mono colored") +
+    xlab("expected average degree") +
+    ylab(paste("probability to become mono colored\n(after",
+               max_iteration, "iterations)")) +
     scale_color_manual(name = "n", values = colors)
 ggsave("pdf/crit_avg_deg.pdf", plot = p, width = 6, height = 4)
 
-## tikz(file = "tex/crit_avg_deg.tex", width = 4.7, height = 2.1)
-## print(p)
-## dev.off()
+tikz(file = "tex/crit_avg_deg.tex", width = 5, height = 2.8)
+print(p)
+dev.off()
