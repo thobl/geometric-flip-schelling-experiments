@@ -39,37 +39,6 @@ run.add(
     header_command=header,
 )
 
-# run.add(
-#     "conv_avg_deg",
-#     command,
-#     {
-#         "model": "rgg_torus",
-#         "n": 25000,
-#         "avg_deg": [
-#             2,
-#             3,
-#             5,
-#             7,
-#             10,
-#             20,
-#             30,
-#             50,
-#             100,
-#             200,
-#             300,
-#             400,
-#             450,
-#             500,
-#             700,
-#         ],
-#         "seed": list(range(0, 100)),
-#         "repetitions": 1,
-#         "iterations": 300,
-#     },
-#     stdout_file=output_dir + "conv_avg_deg.csv",
-#     header_command=header,
-# )
-
 run.add(
     "crit_avg_deg",
     command + " --skip-intermediate",
