@@ -6,6 +6,7 @@ source("general.R")
 
 tbl <- read.csv("data/extended.csv")
 tbl <- add_fractions(tbl)
+tbl <- tbl[tbl$iteration <= 25, ]
 
 p1 <- main_plot(tbl,
                 aes(x = iteration,

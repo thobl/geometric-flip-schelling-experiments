@@ -29,24 +29,6 @@ p <- ggplot(tbl,
     scale_color_manual(name = "n", values = colors)
 ggsave("pdf/crit_avg_deg.pdf", plot = p, width = 6, height = 4)
 
-
-
-## p <- main_plot(tbl,
-##                aes(x = deg_avg_exp,
-##                    ## y = monochrome_fraction,
-##                    y = minority_count_fraction,
-##                    color = factor(n)))
-## ggsave("pdf/crit_avg_deg.pdf", plot = p, width = 6, height = 4)
-
-## ggplot(tbl,
-##        aes(x = n,
-##            y = deg_avg_exp,
-##            color = minority_count_fraction
-##            )) +
-##     geom_point()
-
-## ggsave("pdf/crit_avg_deg.pdf", plot = p, width = 6, height = 9)
-
 ## tikz(file = "tex/crit_avg_deg.tex", width = 4.7, height = 2.1)
 ## print(p)
 ## dev.off()
