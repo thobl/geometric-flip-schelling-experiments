@@ -44,7 +44,8 @@ void IpeFile::line(double x1, double y1, double x2, double y2,
   m_file << "</path>\n";
 }
 
-void IpeFile::box(double x1, double y1, double x2, double y2, const std::string& color) {
+void IpeFile::box(double x1, double y1, double x2, double y2,
+                  const std::string& color) {
   normalize_point(x1, y1);
   normalize_point(x2, y2);
   m_file << "<path stroke = \"" << color << "\">\n";

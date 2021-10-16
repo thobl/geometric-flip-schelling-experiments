@@ -25,18 +25,19 @@ set(HEADERS
   include/rgg.hpp
   include/er.hpp
   include/ipe.hpp
-  include/voting.hpp)
+  include/voting.hpp
+  include/visualization.hpp)
 
 set(SOURCE_FILES
   source/graph.cpp
   source/rgg.cpp
   source/er.cpp
   source/ipe.cpp
-  source/voting.cpp)
+  source/voting.cpp
+  source/visualization.cpp)
 
 set(EXECUTABLE_FILES
-  source/run.cpp
-  source/visualization.cpp)
+  source/run.cpp)
 
 # this is some windows stuff; not sure whether we need it...
 find_library(PSAPI psapi)

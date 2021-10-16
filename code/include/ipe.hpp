@@ -5,9 +5,8 @@
 
 class IpeFile {
  public:
-  explicit IpeFile(const std::string& filename, double scaling_factor = 1.0,
-                   double margin = 16.0);
-
+  IpeFile(const std::string& filename, double scaling_factor = 1.0,
+          double margin = 16.0);
   ~IpeFile();
 
   void new_page();
@@ -19,9 +18,8 @@ class IpeFile {
             const std::string& color = "black",
             const std::string& additional_settings = "");
 
-
   void box(double x1, double y1, double x2, double y2,
-            const std::string& color = "black");  
+           const std::string& color = "black");
 
   void point(double x, double y, const std::string& color = "black");
 

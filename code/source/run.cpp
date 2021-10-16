@@ -10,7 +10,9 @@
 
 #include "CLI11.hpp"
 #include "er.hpp"
+#include "ipe.hpp"
 #include "rgg.hpp"
+#include "visualization.hpp"
 #include "voting.hpp"
 
 // constexpr auto seed = 17u;
@@ -20,12 +22,21 @@
 // constexpr auto avg_degs = {2.0, 4.0, 8.0, 16.0, 32.0};
 
 constexpr auto header =
-    "model,n,m,deg_avg,deg_avg_exp,seed,iteration,monochrome,color_changes,"
+    "model,n,m,deg_avg,deg_avg_exp,iteration,monochrome,color_changes,"
     "minority_count";
 
-void run(std::string model, unsigned n, unsigned avg_deg, unsigned seed,
-         unsigned iterations, std::default_random_engine& generator,
-         bool skip_intermediate) {
+void print_stats(const Graph& G, const std::vector<bool>& colors_new,
+                 const std::vector<bool>& colors_old, const std::string& model,
+                 double avg_deg, unsigned iteration) {
+  std::cout << model << "," << G.n() << "," << G.m() << ","
+            << 2.0 * G.m() / G.n() << "," << avg_deg << "," << iteration << ","
+            << monochromatic_edges(G, colors_new) << ","
+            << nr_color_changes(colors_old, colors_new) << ","
+            << minority_count(colors_new) << "\n";
+}
+
+void run(std::string model, unsigned n, double avg_deg, unsigned iterations,
+         std::default_random_engine& generator, bool skip_intermediate) {
   std::function<Graph(unsigned, double)> graph_generator;
 
   if (model == "rgg_torus") {
@@ -51,21 +62,57 @@ void run(std::string model, unsigned n, unsigned avg_deg, unsigned seed,
   auto colors_old = random_colors(n, generator);
 
   if (!skip_intermediate || 0 == iterations) {
-    std::cout << model << "," << G.n() << "," << G.m() << ","
-              << 2.0 * G.m() / G.n() << "," << avg_deg << "," << seed << ","
-              << 0 << "," << monochromatic_edges(G, colors_old) << "," << 0
-              << "," << minority_count(colors_old) << "\n";
+    print_stats(G, colors_old, colors_old, model, avg_deg, 0);
   }
 
   for (unsigned i = 1; i <= iterations; ++i) {
     auto colors_new = voting_result(G, colors_old, generator);
 
     if (!skip_intermediate || i == iterations) {
-      std::cout << model << "," << G.n() << "," << G.m() << ","
-                << 2.0 * G.m() / G.n() << "," << avg_deg << "," << seed << ","
-                << i << "," << monochromatic_edges(G, colors_new) << ","
-                << nr_color_changes(colors_old, colors_new) << ","
-                << minority_count(colors_new) << "\n";
+      print_stats(G, colors_new, colors_old, model, avg_deg, i);
+    }
+
+    colors_old = std::move(colors_new);
+  }
+}
+
+void run(std::string model, unsigned n, double avg_deg, unsigned iterations,
+         std::default_random_engine& generator, bool skip_intermediate,
+         const std::string& ipe_output) {
+  std::function<GeometricGraph(unsigned, double)> graph_generator;
+
+  if (model == "rgg_torus") {
+    graph_generator = [&generator](unsigned n, double avg_deg) {
+      return random_geometric_graph(n, avg_deg, generator, true);
+    };
+  } else if (model == "rgg_square") {
+    graph_generator = [&generator](unsigned n, double avg_deg) {
+      return random_geometric_graph(n, avg_deg, generator);
+    };
+  } else {
+    std::cout << "ipe output only possible for geometric graphs" << std::endl;
+    exit(1);
+  }
+
+  IpeFile ipe(ipe_output, canvas_size());
+
+  GeometricGraph GG = graph_generator(n, avg_deg);
+  const Graph& G = GG.graph;
+
+  auto colors_old = random_colors(n, generator);
+
+  if (!skip_intermediate || 0 == iterations) {
+    print_stats(G, colors_old, colors_old, model, avg_deg, 0);
+    draw_rgg(GG, colors_old, ipe);
+  }
+
+  for (unsigned i = 1; i <= iterations; ++i) {
+    auto colors_new = voting_result(G, colors_old, generator);
+
+    if (!skip_intermediate || i == iterations) {
+      print_stats(G, colors_new, colors_old, model, avg_deg, i);
+      ipe.new_page();
+      draw_rgg(GG, colors_new, ipe);
     }
 
     colors_old = std::move(colors_new);
@@ -73,7 +120,7 @@ void run(std::string model, unsigned n, unsigned avg_deg, unsigned seed,
 }
 
 int main(int argc, char* argv[]) {
-  CLI::App app("geometric flip schelling");
+  CLI::App app("geometric flip Schelling");
 
   std::string model;
   app.add_option(
@@ -109,6 +156,12 @@ int main(int argc, char* argv[]) {
                "last iteration.")
       ->default_val(false);
 
+  std::string ipe_output;
+  app.add_option(
+         "--ipe-output", ipe_output,
+         "Output file for the ipe output (use only for somewhat small graphs).")
+      ->default_val("");
+
   bool only_header, no_header;
   app.add_flag("--only-header", only_header, "Only print the csv-header.")
       ->default_val(false);
@@ -126,8 +179,14 @@ int main(int argc, char* argv[]) {
   }
 
   std::default_random_engine generator(seed);
+
   for (unsigned i = 0; i < repetitions; ++i) {
-    run(model, n, avg_deg, seed, iterations, generator, skip_intermediate);
+    if (ipe_output == "") {
+      run(model, n, avg_deg, iterations, generator, skip_intermediate);
+    } else {
+      run(model, n, avg_deg, iterations, generator, skip_intermediate,
+          ipe_output);
+    }
   }
 
   return 0;
