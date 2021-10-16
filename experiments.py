@@ -43,7 +43,8 @@ run.add(
     "crit_avg_deg",
     command + " --skip-intermediate",
     {
-        "seed": list(range(0, 1)),
+        # "seed": list(range(0, 500)),
+        "seed": list(range(500, 1000)),
         "model": "rgg_torus",
         "n": [x ** 2 for x in [30, 40, 50, 60, 70, 80, 90, 100]],
         "factor": [
@@ -55,7 +56,7 @@ run.add(
         "repetitions": 1,
         "iterations": 200,
     },
-    stdout_file=output_dir + "crit_avg_deg.csv",
+    stdout_file=output_dir + "crit_avg_deg_extra.csv",
     header_command=header,
 )
 

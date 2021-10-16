@@ -12,9 +12,9 @@ tbl <- aggregate(. ~ model + n + deg_avg_exp, data = tbl, mean)
 tbl$sqrtn <- sqrt(tbl$n)
 tbl$factor <- tbl$deg_avg_exp / tbl$sqrtn
 
-## tbl_lines <- tbl[tbl$factor <= 3.5 & tbl$factor >= 1.4, ]
-tbl_lines <- tbl[tbl$factor <= 2.3 & tbl$factor >= 1.7, ]
+tbl_lines <- tbl[tbl$factor <= 3.2 & tbl$factor >= 1.4, ]
 tbl_labels <- tbl_lines[tbl_lines$n == 10000, ]
+tbl_lines <- tbl[tbl$factor <= 2.6 & tbl$factor >= 1.4, ]
 
 p <- ggplot(tbl,
             aes(x = deg_avg_exp,
@@ -26,16 +26,16 @@ p <- ggplot(tbl,
                  linetype = "dashed") +
     geom_label(data = tbl_labels,
                aes(label = paste0("$", factor, "\\sqrt{n}$"),
-                   ## y = 0.5 * degen - 0.1,
-                   y = degen - 0.1),
+                   ## y = 0.5 * degen - 0.01,
+                   y = (factor - 1.4) / 0.3 / 15),
                show.legend = FALSE, size = 3.1) +
     scale_color_manual(values = colors) +
     xlab("expected average degree") +
-    ylab(paste("probability to become mono colored\n(after",
+    ylab(paste("probability to become monocolored\n(after",
                max_iteration, "iterations)")) +
     scale_color_manual(name = "n", values = colors)
 ggsave("pdf/crit_avg_deg.pdf", plot = p, width = 6, height = 4)
 
-tikz(file = "tex/crit_avg_deg.tex", width = 5, height = 2.8)
+tikz(file = "tex/crit_avg_deg.tex", width = 5.5, height = 2.8)
 print(p)
 dev.off()
