@@ -33,7 +33,7 @@ p <- ggplot(tbl,
     xlab("expected average degree") +
     ylab(paste("probability to become monocolored\n(after",
                max_iteration, "iterations)")) +
-    scale_color_manual(name = "n", values = colors)
+    scale_color_manual(name = "n", values = rev(colors))
 ggsave("pdf/crit_avg_deg.pdf", plot = p, width = 6, height = 4)
 
 tikz(file = "tex/crit_avg_deg.tex", width = 5.5, height = 2.8)
