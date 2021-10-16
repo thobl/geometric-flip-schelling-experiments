@@ -50,10 +50,12 @@ void run(std::string model, unsigned n, unsigned avg_deg, unsigned seed,
 
   auto colors_old = random_colors(n, generator);
 
-  std::cout << model << "," << G.n() << "," << G.m() << ","
-            << 2.0 * G.m() / G.n() << "," << avg_deg << "," << seed << "," << 0
-            << "," << monochromatic_edges(G, colors_old) << "," << 0 << ","
-            << minority_count(colors_old) << "\n";
+  if (!skip_intermediate || 0 == iterations) {
+    std::cout << model << "," << G.n() << "," << G.m() << ","
+              << 2.0 * G.m() / G.n() << "," << avg_deg << "," << seed << ","
+              << 0 << "," << monochromatic_edges(G, colors_old) << "," << 0
+              << "," << minority_count(colors_old) << "\n";
+  }
 
   for (unsigned i = 1; i <= iterations; ++i) {
     auto colors_new = voting_result(G, colors_old, generator);
