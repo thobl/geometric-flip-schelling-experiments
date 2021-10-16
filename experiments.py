@@ -6,15 +6,14 @@ run.group("all")
 
 output_dir = "eval/data/"
 
-command = "code/release/run -m [[model]] -n [[n]] -d [[avg_deg]] -s [[seed]] -r [[repetitions]] -i [[iterations]] --no-header"
+command = "code/release/run -m [[model]] -n [[n]] -d [[avg_deg]] -s [[seed]] -i [[iterations]] --no-header"
 header = "code/release/run --only-header"
 
 run.add(
     "intro",
     command + " --skip-intermediate",
     {
-        "seed": list(range(0, 100)),
-        "repetitions": 10,
+        "seed": list(range(0, 1000)),
         "model": ["rgg_torus", "er_p"],
         "n": [5000, 10000, 15000, 20000, 25000],
         "avg_deg": [2, 4, 8, 16, 32],
@@ -29,7 +28,6 @@ run.add(
     command,
     {
         "seed": list(range(0, 1000)),
-        "repetitions": 1,
         "model": ["rgg_torus", "er_p"],
         "n": 25000,
         "avg_deg": [2, 4, 8, 16, 32],
@@ -43,8 +41,7 @@ run.add(
     "crit_avg_deg",
     command + " --skip-intermediate",
     {
-        "seed": list(range(0, 100)),
-        "repetitions": 10,
+        "seed": list(range(0, 1000)),
         "model": "rgg_torus",
         "n": [x ** 2 for x in [30, 40, 50, 60, 70, 80, 90, 100]],
         "factor": [
@@ -66,7 +63,6 @@ run.add(
         "model": "rgg_torus",
         "n": 500,
         "avg_deg": 16,
-        "repetitions": 1,
         "iterations": 20,
         "seed": 17,
         "ipe": output_dir + "visualization.ipe",

@@ -141,10 +141,6 @@ int main(int argc, char* argv[]) {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   app.add_option("-s,--seed", seed, "Seed for generating randomness.");
 
-  unsigned repetitions;
-  app.add_option("-r,--repetitions", repetitions, "Number of repetitions.")
-      ->default_val(1u);
-
   unsigned iterations;
   app.add_option("-i,--iterations", iterations,
                  "Number of iterations of the flip Schelling process.")
@@ -180,13 +176,11 @@ int main(int argc, char* argv[]) {
 
   std::default_random_engine generator(seed);
 
-  for (unsigned i = 0; i < repetitions; ++i) {
-    if (ipe_output == "") {
-      run(model, n, avg_deg, iterations, generator, skip_intermediate);
-    } else {
-      run(model, n, avg_deg, iterations, generator, skip_intermediate,
-          ipe_output);
-    }
+  if (ipe_output == "") {
+    run(model, n, avg_deg, iterations, generator, skip_intermediate);
+  } else {
+    run(model, n, avg_deg, iterations, generator, skip_intermediate,
+        ipe_output);
   }
 
   return 0;
