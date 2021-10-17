@@ -2,7 +2,8 @@ import run
 import math
 
 run.use_cores(10)
-run.group("all")
+
+run.group("experiments")
 
 output_dir = "eval/data/"
 
@@ -70,5 +71,23 @@ run.add(
     stdout_file=output_dir + "visualization.csv",
     header_command=header,
 )
+
+
+run.group("post")
+
+run.add(
+    "plots",
+    "cd eval && Rscript [[script]] && cd ..",
+    {
+        "script": [
+            "intro-plot.R",
+            "extended.R",
+            "visualization.R",
+            "crit-avg-deg.R",
+        ]
+    },
+)
+
+run.add("latex", "cd eval/tex && pdflatex master.tex cd ../..", {})
 
 run.run()
