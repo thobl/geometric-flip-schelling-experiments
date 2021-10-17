@@ -3,6 +3,10 @@ import math
 
 run.use_cores(10)
 
+run.group("pre")
+
+run.add("compile", "cmake -S code -B code/release && make -C code/release", {})
+
 run.group("experiments")
 
 output_dir = "eval/data/"
