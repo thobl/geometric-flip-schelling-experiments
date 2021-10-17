@@ -2,6 +2,7 @@
 
 \usepackage{tikz}
 \usepackage{graphicx}
+\usepackage{siunitx}
 
 \begin{document}
 
@@ -9,7 +10,7 @@
   \centering
   \small
   \input{intro-plot}
-  \caption{bla}
+  \caption{Intro plot}
 \end{figure}
 
 \begin{figure}
@@ -30,14 +31,29 @@
   \includegraphics[page=7,width=0.132\textwidth]{../data/visualization}%
   
   \input{visualization-plot}
-  \caption{bla}
+  \caption{First six iterations for a graph with \num{500} vertices
+    and average degree $16$ on the torus.  The $y$-axis of the bottom
+    plot shows the fraction of monochrome edges.}
 \end{figure}
 
 \begin{figure}
   \centering
   \small
-  \input{crit_avg_deg}
-  \caption{bla}
+  \input{extended-plot}
+  \caption{Behavior of ERs and RGGs with \num{25000} vertices with low
+    average degree for multiple iterations.  We probably don't want
+    all of these plots.  Note sure what exactly we want.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \small
+  \input{crit-avg-deg}
+  \caption{Probability that one color takes completely over depending
+    on the average degree for different numbers of vertices $n$.  For
+    each value of $n$, the average degrees range from $0.5\sqrt{n}$ to
+    $3.5\sqrt{n}$ in steps of $0.3\sqrt{n}$.  Each point is based on
+    \num{1000} runs.}
 \end{figure}
 
 \end{document}
