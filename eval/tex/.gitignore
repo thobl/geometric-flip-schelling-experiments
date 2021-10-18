@@ -5,3 +5,7 @@ master.pdf
 *.aux
 *.log
 *.out
+crit-avg-deg.tex
+extended-plot.tex
+intro-plot.tex
+visualization-plot.tex
