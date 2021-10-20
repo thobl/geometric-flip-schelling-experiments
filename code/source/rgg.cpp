@@ -3,6 +3,10 @@
 
 #include <functional>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 GeometricGraph random_geometric_graph(unsigned int n, double avg_deg,
                                       std::default_random_engine& generator,
                                       bool torus) {
