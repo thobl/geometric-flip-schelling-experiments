@@ -36,14 +36,23 @@ run the experiments, and create the plots.
 
 Use cmake to compile the code in `code/`.  Make sure to use
 `code/release/` as build directory so that the experiment script can
-find it.  Usually this should work somewhat like this (TODO: update
-how this is done under Windows):
+find it.  When using make (e.g., on Linux), this can be done like
+this:
 
 ```console
 mkdir code/release
 cd code/release
 cmake ..
 make
+```
+
+If you are using Windows with Visual Studio, you can do something like
+this instead:
+
+```console
+cd code
+cmake .
+cmake --build . --config Release
 ```
 
 This will create the command line application for running the flip
