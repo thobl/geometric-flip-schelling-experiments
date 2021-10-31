@@ -11,8 +11,8 @@ run.group("experiments")
 
 output_dir = "eval/data/"
 
-command = "code/release/run -m [[model]] -n [[n]] -d [[avg_deg]] -s [[seed]] -i [[iterations]] --no-header"
-header = "code/release/run --only-header"
+command = '"code/release/run" -m [[model]] -n [[n]] -d [[avg_deg]] -s [[seed]] -i [[iterations]] --no-header'
+header = '"code/release/run" --only-header'
 
 run.add(
     "intro",
@@ -94,4 +94,5 @@ run.add(
 
 run.add("latex", "cd eval/tex && pdflatex master.tex cd ../..", {})
 
-run.run()
+if __name__ == "__main__":
+    run.run()

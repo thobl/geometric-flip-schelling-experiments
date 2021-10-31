@@ -36,7 +36,8 @@ run the experiments, and create the plots.
 
 Use cmake to compile the code in `code/`.  Make sure to use
 `code/release/` as build directory so that the experiment script can
-find it.  Usually this should work somewhat like this:
+find it.  Usually this should work somewhat like this (TODO: update
+how this is done under Windows):
 
 ```console
 mkdir code/release
@@ -87,3 +88,8 @@ compile the TikZ plots, run LaTeX for the file `eval/tex/master.tex`.
     `egg`, and `tikzDevice`.
   * **LaTeX:** You need LaTeX if you want to compile the TikZ-output
     created by R.
+  * **Ipe:** The example visualization is created using Ipe.  If you
+    have Ipe installed and your system finds the executable
+    `ipetoipe`, then the visualization will be rendered to pdf.
+    Otherwise, the Ipe file is created but it is not rendered to pdf
+    (and you will see a warning).
