@@ -22,6 +22,6 @@ p <- main_plot(tbl,
 
 ggsave("pdf/intro-plot.pdf", plot = p, width = 6, height = 3)
 
-tikz(file = "tex/intro-plot.tex", width = 4.7, height = 2.1)
+tikz(file = "tex/intro-plot.tex", width = 4.5, height = 2.0)
 print(p)
 dev.off()

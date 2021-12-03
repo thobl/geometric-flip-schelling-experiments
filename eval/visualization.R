@@ -15,6 +15,6 @@ p <- ggplot(tbl[tbl$iteration <= 6, ],
     theme(axis.title.y = element_blank())
 ggsave("pdf/visualization-plot.pdf", plot = p, width = 6, height = 2)
 
-tikz(file = "tex/visualization-plot.tex", width = 5.6, height = 1.2)
+tikz(file = "tex/visualization-plot.tex", width = 4.8, height = 1.0)
 print(p)
 dev.off()

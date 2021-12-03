@@ -6,7 +6,6 @@ source("general.R")
 
 tbl <- read.csv("data/extended.csv")
 tbl <- add_fractions(tbl)
-tbl <- tbl[tbl$iteration <= 25, ]
 
 p1 <- main_plot(tbl,
                 aes(x = iteration,
@@ -32,7 +31,19 @@ p3 <- main_plot(tbl[tbl$iteration > 0, ],
 p <- ggarrange(p1, p2, p3, nrow = 3, ncol = 1)
 
 ggsave("pdf/extended-plot.pdf", plot = p, width = 9, height = 9)
+ggsave("pdf/extended-plot-monochrome-edges.pdf", plot = p1, width = 9, height = 3)
+ggsave("pdf/extended-plot-minority-size.pdf", plot = p2, width = 9, height = 3)
+ggsave("pdf/extended-plot-color-changes.pdf", plot = p3, width = 9, height = 3)
 
-tikz(file = "tex/extended-plot.tex", width = 5.5, height = 6.5)
+tikz(file = "tex/extended-plot.tex", width = 4.8, height = 5.7)
 print(p)
+dev.off()
+tikz(file = "tex/extended-plot-monochrome-edges.tex", width = 4.8, height = 1.9)
+print(p1)
+dev.off()
+tikz(file = "tex/extended-plot-minority-size.tex", width = 4.8, height = 1.9)
+print(p2)
+dev.off()
+tikz(file = "tex/extended-plot-color-changes.tex", width = 4.8, height = 1.9)
+print(p3)
 dev.off()

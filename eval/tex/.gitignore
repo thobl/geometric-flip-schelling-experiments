@@ -5,6 +5,7 @@ master.pdf
 *.aux
 *.log
 *.out
+*.spl
 crit-avg-deg.tex
 extended-plot.tex
 intro-plot.tex

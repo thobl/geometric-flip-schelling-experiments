@@ -1,4 +1,4 @@
-theme_set(theme_bw())
+theme_set(theme_bw(base_size = 8))
 colors <- c("#D55E00", "#E69F00", "#009E73", "#0072B2",
             "#56B4E9", "#F0E442", "#CC79A7", "#999999")
 

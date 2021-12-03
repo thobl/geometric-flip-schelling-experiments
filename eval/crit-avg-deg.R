@@ -28,7 +28,7 @@ p <- ggplot(tbl,
                aes(label = paste0("$", factor, "\\sqrt{n}$"),
                    ## y = 0.5 * degen - 0.01,
                    y = (factor - 1.4) / 0.3 / 15),
-               show.legend = FALSE, size = 3.1) +
+               show.legend = FALSE, size = 2.5) +
     scale_color_manual(values = colors) +
     xlab("expected average degree") +
     ylab(paste("probability to become monocolored\n(after",
@@ -36,6 +36,6 @@ p <- ggplot(tbl,
     scale_color_manual(name = "n", values = rev(colors))
 ggsave("pdf/crit-avg-deg.pdf", plot = p, width = 6, height = 4)
 
-tikz(file = "tex/crit-avg-deg.tex", width = 5.5, height = 2.8)
+tikz(file = "tex/crit-avg-deg.tex", width = 4.8, height = 2.4)
 print(p)
 dev.off()

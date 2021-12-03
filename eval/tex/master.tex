@@ -1,4 +1,6 @@
-\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2021}
+% \documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2021}
+
+\documentclass[review]{elsarticle}
 
 \usepackage{tikz}
 \usepackage{graphicx}
@@ -8,7 +10,7 @@
 
 \begin{figure}
   \centering
-  \small
+  % \small
   \input{intro-plot}
   \caption{Intro plot}
 \end{figure}
@@ -38,7 +40,7 @@
 
 \begin{figure}
   \centering
-  \small
+  % \small
   \input{extended-plot}
   \caption{Behavior of ERs and RGGs with \num{25000} vertices with low
     average degree for multiple iterations.  We probably don't want
@@ -47,7 +49,29 @@
 
 \begin{figure}
   \centering
-  \small
+  % \small
+  \input{extended-plot-monochrome-edges}
+  \caption{The monochrome edges.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  % \small
+  \input{extended-plot-minority-size}
+  \caption{Size of the minority.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  % \small
+  \input{extended-plot-color-changes}
+  \caption{Color changes.}
+\end{figure}
+
+
+\begin{figure}
+  \centering
+  % \small
   \input{crit-avg-deg}
   \caption{Probability that one color takes completely over depending
     on the average degree for different numbers of vertices $n$.  For
